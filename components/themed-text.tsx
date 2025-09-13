@@ -1,7 +1,6 @@
-import { StyleSheet, Text, TextStyle, type TextProps } from "react-native";
-
 import { moderateScale } from "@/constants/scale";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { StyleSheet, Text, TextStyle, type TextProps } from "react-native";
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
