@@ -1,3 +1,4 @@
+import { store } from "@/store";
 import axios, { AxiosError, isAxiosError } from "axios";
 import Toast from "react-native-toast-message";
 
@@ -11,9 +12,6 @@ const handleError = (error: Error | AxiosError) => {
     isAxiosError(error) &&
     (!!error.response?.data?.message || !!error.response?.data?.error)
   ) {
-    // if (error.response.status === 401) {
-    //   signOut();
-    // }
     Toast.show({
       type: "error",
       text1: error.response?.data?.message || error.response?.data?.error,
@@ -26,6 +24,11 @@ const handleError = (error: Error | AxiosError) => {
 };
 
 $apiClient.interceptors.request.use(function (config) {
+  if (config.headers) {
+    if (store.getState().auth.token) {
+      config.headers.Authorization = `Bearer ${store.getState().auth.token}`;
+    }
+  }
   return config;
 }, handleError);
 

@@ -25,13 +25,13 @@ export function ThemedText({
     <Text
       style={[
         { color },
+        { fontSize: moderateScale(fontSize) },
+        { fontWeight },
         type === "default" ? styles.default : undefined,
         type === "title" ? styles.title : undefined,
         type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
         type === "subtitle" ? styles.subtitle : undefined,
         type === "link" ? styles.link : undefined,
-        { fontSize: moderateScale(fontSize) },
-        { fontWeight },
         style,
       ]}
       {...rest}
