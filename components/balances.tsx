@@ -39,6 +39,10 @@ const Balances = () => {
     router.push("/payouts/form");
   };
 
+  const handleAddFundsPress = () => {
+    router.push("/add-funds");
+  };
+
   return (
     <ThemedView style={styles.header}>
       <FlatList
@@ -56,6 +60,7 @@ const Balances = () => {
           icon={<Ionicons name="add" size={24} color={"white"} />}
           variant="solid"
           text="Add"
+          onPress={handleAddFundsPress}
         />
         <ThemedIconButton
           icon={<Ionicons name="send-outline" size={24} color={"white"} />}

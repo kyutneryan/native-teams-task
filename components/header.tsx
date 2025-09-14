@@ -16,6 +16,14 @@ const Header: FC<Props> = ({ title }) => {
   const textColor = useThemeColor({}, "text");
   const router = useRouter();
 
+  const onBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.navigate("/");
+    }
+  };
+
   return (
     <View style={styles.mainHeader}>
       <ThemedIconButton
@@ -25,7 +33,7 @@ const Header: FC<Props> = ({ title }) => {
         style={{ backgroundColor }}
         size="lg"
         icon={<Ionicons name="arrow-back" />}
-        onPress={router.back}
+        onPress={onBack}
       />
       <ThemedText type="defaultSemiBold">{title}</ThemedText>
     </View>

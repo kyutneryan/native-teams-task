@@ -11,18 +11,32 @@ import {
 } from "@/constants/scale";
 import { useGetTransactionById } from "@/hooks/api";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { Ionicons } from "@expo/vector-icons";
+import * as Linking from "expo-linking";
 import { useLocalSearchParams } from "expo-router";
 import React, { FC } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  Share,
+  StyleSheet,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
 const TransactionDetails: FC = () => {
   const backgroundColor = useThemeColor({}, "background");
+  const tint = useThemeColor({}, "tint");
   const { id } = useLocalSearchParams();
   const { data, isLoading } = useGetTransactionById(Number(id));
 
   const status = data?.status as keyof typeof colorByStatus;
+
+  const shareTransaction = async () => {
+    const url = Linking.createURL(`/transactions/${id}`);
+    await Share.share({ message: url });
+  };
 
   const repeat = () => {
     Toast.show({
@@ -79,6 +93,11 @@ const TransactionDetails: FC = () => {
             </ThemedText>
           </View>
           <ThemedButton title="Repeat payout" onPress={repeat} />
+          <ThemedButton
+            rightIcon={<Ionicons name="share-outline" color={tint} size={20} />}
+            title="Share"
+            onPress={shareTransaction}
+          />
         </ThemedView>
       </ScrollView>
     </SafeAreaView>

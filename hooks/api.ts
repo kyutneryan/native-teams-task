@@ -1,7 +1,21 @@
 import { AuthService } from "@/api/services/auth";
 import { CommonService } from "@/api/services/common";
-import { Transaction, TransactionParams } from "@/models/commmon";
-import { setIsLoggedIn, setToken, useAppDispatch } from "@/store";
+import {
+  BalancesResponse,
+  Transaction,
+  TransactionParams,
+  TransactionsResponse,
+} from "@/models/commmon";
+import {
+  getBalances,
+  getTransactions,
+  setBalances,
+  setIsLoggedIn,
+  setToken,
+  setTransactions,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store";
 import {
   useInfiniteQuery,
   useMutation,
@@ -22,18 +36,55 @@ export const useLoginMutation = () => {
 };
 
 export const useBalancesQuery = () => {
+  const dispatch = useAppDispatch();
+  const initialBalances = useAppSelector(getBalances);
+
+  const initialData: BalancesResponse = {
+    data: initialBalances,
+    message: "",
+    status: 0,
+    type: "",
+  };
+
   return useQuery({
     queryKey: ["balances"],
-    queryFn: CommonService.getBalances,
-    select: (res) => res?.data,
+    queryFn: () =>
+      CommonService.getBalances().then((res) => {
+        dispatch(setBalances(res.data));
+        return res;
+      }),
+    select: (res) => res.data,
+    ...(initialBalances.length ? { initialData } : {}),
   });
 };
 
 export const useLatestTransactionsQuery = () => {
+  const dispatch = useAppDispatch();
+  const initialTransactions = useAppSelector(getTransactions);
+
+  const initialData: TransactionsResponse = {
+    data: {
+      current_page: 0,
+      per_page: 0,
+      total: 0,
+      last_page: 0,
+      has_more: 0,
+      items: initialTransactions,
+    },
+    message: "",
+    status: 0,
+    type: "",
+  };
+
   return useQuery({
     queryKey: ["latest-transactions"],
-    queryFn: () => CommonService.getTransactions({ per_page: 3 }),
+    queryFn: () =>
+      CommonService.getTransactions({ per_page: 3 }).then((res) => {
+        dispatch(setTransactions(res.data.items));
+        return res;
+      }),
     select: (res) => res.data.items,
+    ...(initialTransactions.length ? { initialData } : {}),
   });
 };
 

@@ -1,4 +1,4 @@
 export * from "./main";
 
-export * from "./auth/selectors";
-export * from "./auth/slice";
+export * from "./common/selectors";
+export * from "./common/slice";

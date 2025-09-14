@@ -18,6 +18,7 @@ const App = () => {
         />
         <Stack.Screen name="payouts/form" options={{ headerShown: false }} />
         <Stack.Screen name="payouts/review" options={{ headerShown: false }} />
+        <Stack.Screen name="add-funds" options={{ headerShown: false }} />
         <Stack.Screen name="modal" />
       </Stack.Protected>
       <Stack.Protected guard={!isLoggedIn}>

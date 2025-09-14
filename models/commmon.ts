@@ -35,16 +35,16 @@ export interface TransactionsResponse {
     has_more: number;
     items: Transaction[];
   };
-  message: "Transactions retrieved successfully";
-  status: 200;
-  type: "general_success";
+  message: string;
+  status: number;
+  type: string;
 }
 
 export interface TransactionResponse {
   data?: Transaction;
-  message: "Transactions retrieved successfully";
-  status: 200;
-  type: "general_success";
+  message: string;
+  status: number;
+  type: string;
 }
 
 export interface TransactionParams {
