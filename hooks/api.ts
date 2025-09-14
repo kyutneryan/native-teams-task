@@ -1,5 +1,6 @@
 import { AuthService } from "@/api/services/auth";
 import { CommonService } from "@/api/services/common";
+import { TransactionParams } from "@/models/commmon";
 import { setIsLoggedIn, setToken, useAppDispatch } from "@/store";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -28,5 +29,13 @@ export const useLatestTransactionsQuery = () => {
     queryKey: ["latest-transactions"],
     queryFn: () => CommonService.getTransactions({ per_page: 3 }),
     select: (res) => res.data.items,
+  });
+};
+
+export const useTransactionsQuery = (data: TransactionParams) => {
+  return useQuery({
+    queryKey: ["transactions", data],
+    queryFn: () => CommonService.getTransactions(data),
+    select: (res) => res.data,
   });
 };

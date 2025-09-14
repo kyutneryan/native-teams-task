@@ -20,6 +20,7 @@ export const Colors = {
     border: "#CCC",
     tabBarColor: "black",
     tabBarBackground: "#FFFFFF",
+    success: "#4E9A62",
   },
   dark: {
     text: "#ECEDEE",
@@ -32,6 +33,7 @@ export const Colors = {
     border: "#444",
     tabBarColor: "white",
     tabBarBackground: "#434447",
+    success: "#4E9A62",
   },
 };
 

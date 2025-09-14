@@ -7,6 +7,7 @@ const App = () => {
     <Stack>
       <Stack.Protected guard={isLoggedIn}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="transactions" options={{ headerShown: false }} />
         <Stack.Screen name="modal" />
       </Stack.Protected>
       <Stack.Protected guard={!isLoggedIn}>

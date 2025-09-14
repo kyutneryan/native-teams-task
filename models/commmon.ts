@@ -38,3 +38,14 @@ export interface TransactionsResponse {
   status: 200;
   type: "general_success";
 }
+
+export interface TransactionParams {
+  page?: number;
+  per_page?: number;
+  wallet_id?: string;
+  type?: string;
+  status?: string;
+  date_from?: string;
+  date_to?: string;
+  search?: string;
+}
