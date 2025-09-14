@@ -1,9 +1,15 @@
 import { store } from "@/store";
 import axios, { AxiosError, isAxiosError } from "axios";
+import { Platform } from "react-native";
 import Toast from "react-native-toast-message";
 
+const API_BASE =
+  Platform.OS === "android"
+    ? process.env.EXPO_PUBLIC_ANDROID_API_URL
+    : process.env.EXPO_PUBLIC_API_URL;
+
 const $apiClient = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  baseURL: API_BASE,
   withCredentials: true,
 });
 
@@ -18,6 +24,7 @@ const handleError = (error: Error | AxiosError) => {
     });
     return Promise.reject(error.response.data);
   } else {
+    console.error(error.message);
     Toast.show({ type: "error", text1: "Something went wrong" });
     return Promise.reject(error);
   }
