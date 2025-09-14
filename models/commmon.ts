@@ -16,6 +16,7 @@ export interface BalancesResponse {
 }
 
 export interface Transaction {
+  id: number;
   wallet_id: number;
   type: string;
   status: string;
@@ -39,6 +40,13 @@ export interface TransactionsResponse {
   type: "general_success";
 }
 
+export interface TransactionResponse {
+  data?: Transaction;
+  message: "Transactions retrieved successfully";
+  status: 200;
+  type: "general_success";
+}
+
 export interface TransactionParams {
   page?: number;
   per_page?: number;
@@ -48,4 +56,27 @@ export interface TransactionParams {
   date_from?: string;
   date_to?: string;
   search?: string;
+}
+
+export interface PayoutRequest {
+  wallet_id: number;
+  provider: "bank" | "card";
+  amount: number;
+  currency_id: number;
+  bank_id?: number;
+}
+
+export interface PayoutResponse {
+  data: {
+    id: number;
+    status: string;
+    amount: number;
+    provider: string;
+    wallet_id: number;
+    currency_id: number;
+    created_at: string;
+  };
+  message: string;
+  status: number;
+  type: string;
 }

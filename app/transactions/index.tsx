@@ -28,7 +28,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const TITLE_SCROLL_THRESHOLD = verticalScale(60);
 
-const SmoothTitleTransfer = () => {
+const Transactions = () => {
   const backgroundColor = useThemeColor({}, "background");
   const listBackgroundColor = useThemeColor(
     { light: "#cbcdd7", dark: "#2E2E31" },
@@ -46,7 +46,7 @@ const SmoothTitleTransfer = () => {
     refetch,
     isRefetching,
   } = useTransactionsQuery({
-    per_page: 7,
+    per_page: 4,
   });
 
   const headerTitleOpacity = scrollY.interpolate({
@@ -227,4 +227,4 @@ const styles = StyleSheet.create({
   footer: { paddingVertical: verticalScale(16) },
 });
 
-export default SmoothTitleTransfer;
+export default Transactions;

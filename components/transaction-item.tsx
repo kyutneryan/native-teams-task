@@ -2,11 +2,12 @@ import { CURRENCIES_BY_ID } from "@/constants/common";
 import { horizontalScale } from "@/constants/scale";
 import { Colors } from "@/constants/theme";
 import { Transaction } from "@/models/commmon";
+import { useRouter } from "expo-router";
 import React, { FC } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "./themed-text";
 
-const colorByStatus = {
+export const colorByStatus = {
   completed: {
     light: Colors.light.success,
     dark: Colors.dark.success,
@@ -26,10 +27,15 @@ type Props = {
 };
 
 const TransactionItem: FC<Props> = ({ item }) => {
+  const router = useRouter();
   const status = item.status as keyof typeof colorByStatus;
 
+  const onPress = () => {
+    router.push(`/transactions/${item.id}`);
+  };
+
   return (
-    <View>
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress}>
       <View style={styles.row}>
         <ThemedText
           ellipsizeMode="tail"
@@ -53,7 +59,7 @@ const TransactionItem: FC<Props> = ({ item }) => {
           {item.status.charAt(0).toUpperCase() + item.status.slice(1)}
         </ThemedText>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

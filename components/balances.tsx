@@ -8,6 +8,7 @@ import {
 import { useBalancesQuery } from "@/hooks/api";
 import { Balance } from "@/models/commmon";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useCallback } from "react";
 import { FlatList, ListRenderItem, StyleSheet } from "react-native";
 import { ThemedIconButton } from "./themed-icon-button";
@@ -34,6 +35,10 @@ const Balances = () => {
     );
   }, []);
 
+  const handlePayoutPress = () => {
+    router.push("/payouts/form");
+  };
+
   return (
     <ThemedView style={styles.header}>
       <FlatList
@@ -56,6 +61,7 @@ const Balances = () => {
           icon={<Ionicons name="send-outline" size={24} color={"white"} />}
           variant="solid"
           text="Send"
+          onPress={handlePayoutPress}
         />
       </ThemedView>
     </ThemedView>

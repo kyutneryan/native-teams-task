@@ -2,7 +2,12 @@ import { AuthService } from "@/api/services/auth";
 import { CommonService } from "@/api/services/common";
 import { Transaction, TransactionParams } from "@/models/commmon";
 import { setIsLoggedIn, setToken, useAppDispatch } from "@/store";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const useLoginMutation = () => {
   const dispatch = useAppDispatch();
@@ -48,5 +53,27 @@ export const useTransactionsQuery = (data: TransactionParams) => {
         (acc, curr) => [...(acc || []), ...curr.data.items],
         []
       ),
+  });
+};
+
+export const useGetTransactionById = (id: number) => {
+  return useQuery({
+    queryKey: ["transaction", id],
+    queryFn: () => CommonService.getTransactionById({ id }),
+    select: (res) => res?.data,
+    enabled: !!id,
+  });
+};
+
+export const usePayoutMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: CommonService.createPayout,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["balances"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["latest-transactions"] });
+    },
   });
 };
