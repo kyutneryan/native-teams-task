@@ -1,8 +1,8 @@
 import { AuthService } from "@/api/services/auth";
 import { CommonService } from "@/api/services/common";
-import { TransactionParams } from "@/models/commmon";
+import { Transaction, TransactionParams } from "@/models/commmon";
 import { setIsLoggedIn, setToken, useAppDispatch } from "@/store";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 export const useLoginMutation = () => {
   const dispatch = useAppDispatch();
@@ -33,9 +33,20 @@ export const useLatestTransactionsQuery = () => {
 };
 
 export const useTransactionsQuery = (data: TransactionParams) => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ["transactions", data],
-    queryFn: () => CommonService.getTransactions(data),
-    select: (res) => res.data,
+    queryFn: ({ pageParam }) =>
+      CommonService.getTransactions({ ...data, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      return lastPage.data.current_page < lastPage.data.last_page
+        ? lastPage.data.current_page + 1
+        : undefined;
+    },
+    select: (res) =>
+      res?.pages?.reduce<Transaction[]>(
+        (acc, curr) => [...(acc || []), ...curr.data.items],
+        []
+      ),
   });
 };

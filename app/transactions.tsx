@@ -1,4 +1,5 @@
 import EmptyTransactions from "@/components/empty-transactions";
+import { ThemedButton } from "@/components/themed-button";
 import { ThemedIconButton } from "@/components/themed-icon-button";
 import { ThemedText } from "@/components/themed-text";
 import TransactionItem from "@/components/transaction-item";
@@ -11,13 +12,14 @@ import { useTransactionsQuery } from "@/hooks/api";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { Transaction } from "@/models/commmon";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useRef } from "react";
 import {
   ActivityIndicator,
   Animated,
   FlatList,
   ListRenderItem,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   View,
@@ -35,7 +37,17 @@ const SmoothTitleTransfer = () => {
   const textColor = useThemeColor({}, "text");
   const scrollY = useRef(new Animated.Value(0)).current;
   const router = useRouter();
-  const { data, isLoading } = useTransactionsQuery({});
+  const {
+    data,
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    refetch,
+    isRefetching,
+  } = useTransactionsQuery({
+    per_page: 7,
+  });
 
   const headerTitleOpacity = scrollY.interpolate({
     inputRange: [
@@ -94,6 +106,18 @@ const SmoothTitleTransfer = () => {
     return <EmptyTransactions />;
   }, [isLoading]);
 
+  const onLoadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor }} edges={["top"]}>
       <View style={styles.mainHeader}>
@@ -127,6 +151,9 @@ const SmoothTitleTransfer = () => {
         />
       </View>
       <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+        }
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollView}
         onScroll={Animated.event(
@@ -146,7 +173,7 @@ const SmoothTitleTransfer = () => {
           <ThemedText type="title">Transactions</ThemedText>
         </Animated.View>
         <FlatList
-          data={data?.items || []}
+          data={data || []}
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={[
@@ -157,6 +184,18 @@ const SmoothTitleTransfer = () => {
           ItemSeparatorComponent={renderSeparatorComponent}
           renderItem={renderItem}
           ListEmptyComponent={renderListEmptyComponent}
+          ListFooterComponent={
+            <View style={styles.footer}>
+              {hasNextPage ? (
+                <ThemedButton
+                  variant="solid"
+                  title={"Load more"}
+                  loading={isFetchingNextPage}
+                  onPress={onLoadMore}
+                />
+              ) : null}
+            </View>
+          }
         />
       </ScrollView>
     </SafeAreaView>
@@ -180,8 +219,12 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   list: { padding: moderateScale(24), borderRadius: moderateScale(16) },
-  scrollView: { paddingHorizontal: PADDING_HORIZONTAL },
+  scrollView: {
+    paddingHorizontal: PADDING_HORIZONTAL,
+    paddingBottom: verticalScale(24),
+  },
   div: { height: verticalScale(44) },
+  footer: { paddingVertical: verticalScale(16) },
 });
 
 export default SmoothTitleTransfer;
