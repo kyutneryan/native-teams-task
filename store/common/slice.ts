@@ -31,10 +31,21 @@ export const commonSlice = createSlice({
     setTransactions: (state, action: PayloadAction<Transaction[]>) => {
       state.latestTransactions = action.payload;
     },
+    logOutFn: (state) => {
+      state.token = null;
+      state.isLoggedIn = false;
+      state.balances = [];
+      state.latestTransactions = [];
+    },
   },
 });
 
-export const { setTransactions, setBalances, setIsLoggedIn, setToken } =
-  commonSlice.actions;
+export const {
+  logOutFn,
+  setTransactions,
+  setBalances,
+  setIsLoggedIn,
+  setToken,
+} = commonSlice.actions;
 
 export default commonSlice.reducer;

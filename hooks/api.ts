@@ -54,7 +54,7 @@ export const useBalancesQuery = () => {
         return res;
       }),
     select: (res) => res.data,
-    ...(initialBalances.length ? { initialData } : {}),
+    ...(initialBalances?.length ? { initialData } : {}),
   });
 };
 
@@ -84,7 +84,7 @@ export const useLatestTransactionsQuery = () => {
         return res;
       }),
     select: (res) => res.data.items,
-    ...(initialTransactions.length ? { initialData } : {}),
+    ...(initialTransactions?.length ? { initialData } : {}),
   });
 };
 

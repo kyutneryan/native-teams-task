@@ -25,8 +25,8 @@ const handleError = (error: Error | AxiosError) => {
 
 $apiClient.interceptors.request.use(function (config) {
   if (config.headers) {
-    if (store.getState().auth.token) {
-      config.headers.Authorization = `Bearer ${store.getState().auth.token}`;
+    if (store.getState().common.token) {
+      config.headers.Authorization = `Bearer ${store.getState().common.token}`;
     }
   }
   return config;
